@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css'
 import moment from 'moment'
+import FlipMove from 'react-flip-move'
 import {
   BrowserRouter as Router,
   Route,
@@ -37,13 +38,24 @@ class Home extends Component {
     return parseInt(query.get('timestamp') || Math.round(Date.now() / 1000))
   }
 
-  fetch() {
-    fetch(`https://pressminder.org/v1/publication?timestamp=${this.getTimestamp()}`)
-    .then(response => response.json())
-    .then(data => {
-      this.setState({
-        publications: data
-      })
+  async fetch() {
+    const timestamp = this.getTimestamp()
+    const response = await fetch(`https://pressminder.org/v1/${timestamp}/publication`)
+    const data = await response.json()
+    const promises = []
+    for (const publication of data) {
+      promises.push(
+        fetch(`https://pressminder.org/v1/${timestamp}/publication/${publication.id}/articles?count=5`)
+        .then(response => response.json())
+        .then(data => {
+          publication.articles = data
+        })
+      )
+    }
+    await Promise.all(promises)
+    this.setState({
+      timestamp: timestamp,
+      publications: data
     })
   }
 
@@ -51,12 +63,15 @@ class Home extends Component {
     this.fetch()
 
     this.interval = setInterval(() => {
-      const newTimestamp = this.getTimestamp() + this.getSpeed()
+      if (!this.getSpeed()) {
+        return
+      }
+      const newTimestamp = Math.round((this.getTimestamp() + this.getSpeed()) / 3600) * 3600
       if (newTimestamp >= (Date.now() / 1000)) {
         return
       }
       this.props.history.push(`?timestamp=${newTimestamp}`)
-    }, 5000)
+    }, 2000)
   }
 
   componentWillReceiveProps() {
@@ -64,19 +79,21 @@ class Home extends Component {
   }
 
   render() {
-    const timestamp = this.getTimestamp()
     return (
       <div className="Home">
         <div className="Home-header">
+          {this.state.timestamp ? 
           <DateSlider
-            value={timestamp}
+            timestamp={this.state.timestamp}
+            speed={this.getSpeed()}
           />
+          : ''}
         </div>
         {this.state.publications.map(publication => {
           return (
             <Publication
               key={publication.id}
-              timestamp={timestamp}
+              timestamp={this.getTimestamp()}
               publication={publication}
             />
           )
@@ -89,56 +106,66 @@ class Home extends Component {
 class Publication extends Component {
   constructor(props) {
     super(props);
-    this.state = {articles: []}
-  }
-
-  fetch() {
-    fetch(`https://pressminder.org/v1/publication/${this.props.publication.id}/articles?count=5&timestamp=${this.props.timestamp}`)
-    .then(response => response.json())
-    .then(data => {
-      this.setState({
-        articles: data
-      })
-    })
   }
 
   componentWillMount() {
-    this.fetch()
-  }
-
-  componentWillReceiveProps() {
-    this.fetch()
+    console.log("mounting")
   }
 
   render() {
     return (
       <div className="Publication">
-        <div className="Publication-preview">
-          <img src={`https://pressminder.imgix.net/${this.props.publication.screenshot}?fm=jpg&w=160`}/>
+        <div className="Publication-title">
+          {this.props.publication.name}
         </div>
-        <div className="Publication-articles">
-          {this.state.articles.map(article => {
+        <FlipMove
+          enterAnimation="none" 
+          leaveAnimation="none"
+          appearAnimation="fade"
+          className="Publication-articles"
+        >
+          {this.props.publication.articles.map(article => {
             return (
-              <Article key={article.url} { ...article }/>
+              <Article key={`${article.url}-${article.top}`} { ...article }/>
             )
           })}
-        </div>
+        </FlipMove>
       </div>
     );
   }
 }
 
-const Article = ({ title, url }) => (
-  <div className="Article">
-    <a className="Article-title" href={url}>
-      {title}
-    </a>
-  </div>
-)
+class Article extends Component {
+  render() {
+    return (
+      <div className="Article">
+        <a className="Article-title" href={this.props.url}>
+          {this.props.title}
+        </a>
+      </div>
+    )
+  }
+}
 
-const DateSlider = ({ value }) => (
+const DateSlider = ({ timestamp, speed }) => (
   <div className="DateSlider">
-    <span className="DateSlider-value">{moment.unix(value).format('MMMM Do YYYY, h:mm a')}</span>
+    <div className="DateSlider-value">{moment.unix(timestamp).format('MMMM Do YYYY, ha')}</div>
+    {!speed ?
+      <div className="DateSlider-actions">
+        <Link className="DateSlider-action" to={`?timestamp=${timestamp}&speed=-3600`}>Backward</Link>
+        <Link className="DateSlider-action" to={`?timestamp=${timestamp}&speed=3600`}>Forward</Link>
+      </div>
+    : speed > 0 ?
+      <div className="DateSlider-actions">
+        <Link className="DateSlider-action" to={`?timestamp=${timestamp}&speed=-3600`}>Backward</Link>
+        <Link className="DateSlider-action" to={`?timestamp=${timestamp}&speed=0`}>Pause</Link>
+      </div>
+      :
+      <div className="DateSlider-actions">
+        <Link className="DateSlider-action" to={`?timestamp=${timestamp}&speed=0`}>Pause</Link>
+        <Link className="DateSlider-action" to={`?timestamp=${timestamp}&speed=3600`}>Forward</Link>
+      </div>
+    }
   </div>
 )
 
