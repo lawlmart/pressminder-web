@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+  - 8
+cache:
+  yarn: true
+  directories:
+    - node_modules
+script:
+  - echo "No script!"
+deploy:
+  provider: s3
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: "pressminder-web"
+  acl: public_read
+  local_dir: build
+
