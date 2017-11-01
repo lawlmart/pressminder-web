@@ -13,12 +13,18 @@
 }
 
 .Header-controls {
-  width:200px;
+  width:254px;
   margin:0px auto;
 }
 
 .Header-datetime-control-input {
   width:100%;
+  text-align: center;
+  cursor: pointer;
+  padding:5px;
+  border-radius: 4px;
+  font-size:16px;
+  border-width:1px;
 }
 
 .Publication-articles {

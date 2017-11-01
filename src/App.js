@@ -52,6 +52,7 @@ class Home extends Component {
             <Datetime
               className="Header-datetime-control"
               inputProps={{className: 'Header-datetime-control-input'}}
+              defaultValue={Date.now()}
               onChange={momentObj => {
                 this.fetch(momentObj.unix())
               }}
