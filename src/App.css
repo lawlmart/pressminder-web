@@ -21,12 +21,7 @@
   
 }
 
-.Publication-preview {
-  float: right;
-  margin-right:20px;
-}
-
-.Publication-preview > img {
+.Publication-screenshot > img {
   height: 120px;
   width: 160px;
   object-fit: cover;
