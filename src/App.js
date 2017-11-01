@@ -50,9 +50,13 @@ class Home extends Component {
     this.fetchInterval = setInterval(() => {
       if (self.state.playing) {
         const newTimestamp = self.state.timestamp + 3600000 
-        self.fetch(newTimestamp)
+        if (newTimestamp < Date.now()) {
+          self.fetch(newTimestamp)
+        } else {
+          self.setState({playing: false})
+        }
       }
-    }, 500)
+    }, 1000)
   }
 
   coponentDidUnmount() {
@@ -66,17 +70,16 @@ class Home extends Component {
           <div className="Header-controls">
             <Datetime
               className="Header-datetime-control"
-              inputProps={{className: 'Header-datetime-control-input'}}
               value={new Date(this.state.timestamp)}
               onChange={momentObj => {
                 this.fetch(momentObj.unix() * 1000)
               }}
             />
             <button
-              className="Header-buttom-control"
+              className="btn btn-dark Header-button-control"
               onClick={() => this.setState({playing: !this.state.playing})}
             >
-              {this.playing ? 'Pause' : 'Play'}
+              {this.state.playing ? 'Pause' : 'Play'}
             </button>
           </div>
         </div>

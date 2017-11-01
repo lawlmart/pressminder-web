@@ -13,18 +13,25 @@
 }
 
 .Header-controls {
-  width:254px;
+  width:300px;
   margin:0px auto;
+  text-align: center;
 }
 
 .Header-datetime-control-input {
   width:100%;
   text-align: center;
   cursor: pointer;
-  padding:5px;
-  border-radius: 4px;
-  font-size:16px;
-  border-width:1px;
+}
+
+.Header-button-control {
+  position:relative;
+  top:-1px;
+  width:80px;
+}
+
+.Article {
+  background-color: white;
 }
 
 .Publication-articles {
@@ -46,6 +53,8 @@
 
  .rdt {
   position: relative;
+  display:inline-block;
+  margin-right:20px;
 }
 .rdtPicker {
   display: none;
