@@ -5,6 +5,7 @@
   "dependencies": {
     "moment": "^2.18.1",
     "react": "^16.0.0",
+    "react-datetime": "^2.10.3",
     "react-dom": "^16.0.0",
     "react-flip-move": "^2.9.15",
     "react-router": "^4.2.0",
