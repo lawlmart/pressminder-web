@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom'
 
 async function fetchSnapshot(names, timestamp) {
-  return fetch(`https://pressminder.org/v1/snapshot/${names.join(',')}?count=10${timestamp ? '&timestamp=' + Math.round(timestamp / 1000) : ''}`)
+  return fetch(`https://api.pressminder.org/v1/snapshot/${names.join(',')}?count=10${timestamp ? '&timestamp=' + Math.round(timestamp / 1000) : ''}`)
   .then(response => response.json())
 }
 
