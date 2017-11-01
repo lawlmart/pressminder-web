@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom'
 
 async function fetchSnapshot(names, timestamp) {
-  return fetch(`https://pressminder.org/v1/snapshot/${names.join(',')}?count=10${timestamp ? '&timestamp=' + timestamp : ''}`)
+  return fetch(`https://pressminder.org/v1/snapshot/${names.join(',')}?count=10${timestamp ? '&timestamp=' + Math.round(timestamp / 1000) : ''}`)
   .then(response => response.json())
 }
 
@@ -28,20 +28,35 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      snapshot: {}
+      snapshot: {},
+      playing: false,
+      loading: true,
+      timestamp: null
     }
   }
 
   fetch(timestamp) {
+    this.setState({loading: true})
     fetchSnapshot(['nyt', 'bbc'], timestamp)
     .then(snapshot => {
-      this.setState({snapshot})
+      this.setState({snapshot, timestamp, loading: false})
     })
   }
 
 
   componentWillMount() {
-    this.fetch(null)
+    const self = this
+    this.fetch(Date.now())
+    this.fetchInterval = setInterval(() => {
+      if (self.state.playing) {
+        const newTimestamp = self.state.timestamp + 3600000 
+        self.fetch(newTimestamp)
+      }
+    }, 500)
+  }
+
+  coponentDidUnmount() {
+    clearInterval(this.fetchInterval)
   }
 
   render() {
@@ -52,11 +67,17 @@ class Home extends Component {
             <Datetime
               className="Header-datetime-control"
               inputProps={{className: 'Header-datetime-control-input'}}
-              defaultValue={Date.now()}
+              value={new Date(this.state.timestamp)}
               onChange={momentObj => {
-                this.fetch(momentObj.unix())
+                this.fetch(momentObj.unix() * 1000)
               }}
             />
+            <button
+              className="Header-buttom-control"
+              onClick={() => this.setState({playing: !this.state.playing})}
+            >
+              {this.playing ? 'Pause' : 'Play'}
+            </button>
           </div>
         </div>
         <div className="Home-content">
