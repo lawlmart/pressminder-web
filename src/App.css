@@ -13,21 +13,19 @@
 }
 
 .Header-controls {
-  width:300px;
-  margin:0px auto;
-  text-align: center;
+  display: flex;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
 }
 
 .Header-datetime-control-input {
   width:100%;
   text-align: center;
-  cursor: pointer;
 }
 
 .Header-button-control {
-  position:relative;
-  top:-1px;
-  width:80px;
+  margin:0px 10px;
 }
 
 .Article {
@@ -71,14 +69,18 @@
   width:400px;
 }
 
+.Publication-selected {
+  border: 2px solid red;
+  position: absolute;
+}
+
 /*!
  * https://github.com/YouCanBookMe/react-datetime
  */
 
- .rdt {
+.rdt {
   position: relative;
   display:inline-block;
-  margin-right:20px;
 }
 .rdtPicker {
   display: none;
@@ -297,5 +299,7 @@ td.rdtYear:hover {
 }
 
 .rangeslider {
+  min-width:200px;
   display:inline-block;
+  margin:0px 20px !important; 
 }

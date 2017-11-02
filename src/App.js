@@ -7,6 +7,7 @@ import {
   Route  
 } from 'react-router-dom'
 import Slider from 'react-rangeslider'
+import FontAwesome from 'react-fontawesome'
 import 'react-rangeslider/lib/index.css'
 
 async function fetchSnapshot(names, timestamp) {
@@ -33,8 +34,11 @@ class Home extends Component {
       snapshot: {},
       playing: false,
       loading: true,
-      timestamp: null
+      timestamp: null,
+      replayable: true
     }
+    this.MAX_TIMESTAMP = 3600 * Math.floor(Date.now() / 1000 / 3600)
+    this.MIN_TIMESTAMP = this.MAX_TIMESTAMP - 604800
   }
 
   fetch(timestamp) {
@@ -56,7 +60,7 @@ class Home extends Component {
         if (newTimestamp < Date.now()) {
           self.fetch(newTimestamp)
         } else {
-          self.setState({playing: false})
+          self.setState({playing: false, replayable: true})
         }
       }
     }, 1000)
@@ -67,7 +71,7 @@ class Home extends Component {
   }
 
   render() {
-    let timestamp = 3600 * Math.floor(Date.now() / 1000 / 3600)
+    
     return (
       <div className="Home">
         <div className="Home-header">
@@ -83,13 +87,31 @@ class Home extends Component {
             />
             <button
               className="btn btn-dark Header-button-control"
-              onClick={() => this.setState({playing: !this.state.playing})}
+              onClick={() => {
+                if (this.state.playing) {
+                  this.setState({playing: false})
+                } else {
+                  this.setState({playing: true})
+                  if (this.state.replayable) {
+                    this.setState({replayable: false})
+                    this.fetch(this.MIN_TIMESTAMP * 1000)
+                  }
+                }
+              }}
             >
-              {this.state.playing ? 'Pause' : 'Play'}
+              {this.state.playing ? 
+                <FontAwesome
+                  name='pause'
+                />
+              : 
+                <FontAwesome
+                  name='play'
+                />
+              }
             </button>
             <Slider
-              min={timestamp - 604800}
-              max={timestamp}
+              min={this.MIN_TIMESTAMP}
+              max={this.MAX_TIMESTAMP}
               step={3600}
               value={this.state.timestamp / 1000}
               orientation="horizontal"
@@ -132,6 +154,7 @@ class Publication extends Component {
     }
   }
   render() {
+    const RATIO = 3.2
     return (
       <div className="Publication">
         <div className="Publication-screenshot">
@@ -140,6 +163,18 @@ class Publication extends Component {
             src={`https://d1qd36z8dssjk5.cloudfront.net/${this.props.screenshot}`}
             onLoad={() => this.setState({imageLoaded: true})}
           />
+          {this.state.selected ?
+            <div
+              className="Publication-selected"
+              style={{
+                left: this.state.selected.left / RATIO,
+                top: this.state.selected.top / RATIO,
+                width: this.state.selected.width / RATIO,
+                height: this.state.selected.height / RATIO
+              }}
+            >
+            </div>
+          : ''}
           {this.props.loading || !this.state.imageLoaded ?
             <div className="Publication-loading">
               <div className="loader"></div>
@@ -154,7 +189,16 @@ class Publication extends Component {
         >
           {this.props.articles.map(article => {
             return (
-              <Article key={`${article.url}-${article.since}`} { ...article }/>
+              <Article
+                key={`${article.url}-${article.since}`}
+                onMouseEnter={e => {
+                  this.setState({selected: article})
+                }}
+                onMouseLeave={e => {
+                  this.setState({selected: null})
+                }}
+                { ...article }
+              />
             )
           })}
         </FlipMove>
@@ -166,7 +210,11 @@ class Publication extends Component {
 class Article extends Component {
   render() {
     return (
-      <div className="Article">
+      <div
+        className="Article"
+        onMouseEnter={this.props.onMouseEnter}
+        onMouseLeave={this.props.onMouseLeave}
+      >
         <a className="Article-title" target="_blank" href={this.props.url}>
           {this.props.title}
         </a>
