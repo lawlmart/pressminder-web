@@ -274,7 +274,7 @@ class Article extends Component {
       return parseInt(v.timestamp, 10) === parseInt(timestamp, 10)
     })
 
-    return version || this.state.versions[this.state.versions.length - 1]
+    return version || this.state.versions[0]
   }
 
   renderArticleDiff() {
@@ -298,7 +298,7 @@ class Article extends Component {
   }
 
   renderTextDiff(text1, text2) {
-    const diff = jsdiff.diffChars(text1, text2)
+    const diff = jsdiff.diffSentences(text1, text2)
     
     let output = ""
     diff.forEach(function(part){
@@ -329,7 +329,7 @@ class Article extends Component {
           >
             {this.state.versions.map(version => {
               return (
-                <option key={"version-" + version.timestamp} value={version.timestamp}>{moment.unix(version.timestamp).toString()}</option>
+                <option key={"version-" + version.timestamp} value={version.timestamp}>{moment.unix(version.timestamp).format('LLLL')}</option>
               )
             })}
           </select>
@@ -345,7 +345,7 @@ class Article extends Component {
           >
             {this.state.versions.map(version => {
               return (
-                <option key={"compare-" + version.timestamp} value={version.timestamp}>{moment.unix(version.timestamp).toString()}</option>
+                <option key={"compare-" + version.timestamp} value={version.timestamp}>{moment.unix(version.timestamp).format('LLLL')}</option>
               )
             })}
           </select>
