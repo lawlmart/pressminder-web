@@ -1,19 +1,13 @@
 language: node_js
-env:
-  global:
-    - PATH=$HOME/.local/bin:$PATH
 node_js:
-  - "8"
-python:
-  - "2.7"
+  - 8
 cache:
   yarn: true
   directories:
     - node_modules
 script:
 before_install:
-  - pip install --user awscli
-  - export PATH=$PATH:$HOME/.local/bin
+  - npm install -g aws-cli
 install:
   - yarn run build
 deploy:
