@@ -140,6 +140,7 @@ class Home extends Component {
               orientation="horizontal"
               tooltip={false}
               onChange={value => {
+                this.setState({replayable: value === this.MAX_TIMESTAMP})
                 this.fetch(value * 1000)
               }}
             />
