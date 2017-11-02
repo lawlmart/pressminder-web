@@ -16,8 +16,10 @@ import 'react-rangeslider/lib/index.css'
 const jsdiff = require('diff')
 const history = createHistory()
 
+const ARTICLE_COUNT = 20
+
 async function fetchSnapshot(names, timestamp) {
-  return fetch(`https://api.pressminder.org/v1/snapshot/${names.join(',')}?count=10${timestamp ? '&timestamp=' + Math.round(timestamp / 1000) : ''}`)
+  return fetch(`https://api.pressminder.org/v1/snapshot/${names.join(',')}?count=${ARTICLE_COUNT}${timestamp ? '&timestamp=' + Math.round(timestamp / 1000) : ''}`)
   .then(response => response.json())
 }
 
