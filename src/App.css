@@ -74,6 +74,33 @@
   position: absolute;
 }
 
+.Article {
+  margin:20px;
+}
+
+.Article-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Article-controls-version {
+  max-width:300px;
+  display:inline-block;
+  margin:0px 10px;
+}
+
+.Article-text {
+  margin:10px auto;
+  max-width:900px;
+  text-align: justify;
+}
+
+.Article-title {
+  font-size:22px;
+  margin:20px 0px;
+}
+
 /*!
  * https://github.com/YouCanBookMe/react-datetime
  */

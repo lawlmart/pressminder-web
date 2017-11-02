@@ -284,8 +284,8 @@ class Article extends Component {
     const display = document.getElementById('text')
     display.innerHTML = 
     `
-    <div class="title">${this.renderTextDiff(article1.title, article2.title)}</div>
-    <div class="authors">
+    <div class="Article-title">${this.renderTextDiff(article1.title, article2.title)}</div>
+    <div class="Article-authors">
     ${
       this.renderTextDiff(
         article1.authors ? article1.authors.join(', '): '',
@@ -293,7 +293,7 @@ class Article extends Component {
       )
     }
     </div>
-    <div class="content">${this.renderTextDiff(article1.text, article2.text)}</div>
+    <div class="Article-content">${this.renderTextDiff(article1.text, article2.text).replace(/\n/g,'<br/>')}</div>
     `
   }
 
@@ -320,7 +320,7 @@ class Article extends Component {
         <div className="Article-controls">
           <select
             name="version"
-            className="Article-controls-version"
+            className="form-control Article-controls-version"
             onChange={e => {
               const newVersion = e.target.value
               history.push(`?version=${newVersion}&compare=${this.state.comparedVersion || ''}`)
@@ -336,7 +336,7 @@ class Article extends Component {
           compared to
           <select
             name="compare-version"
-            className="Article-controls-version"
+            className="form-control Article-controls-version"
             onChange={e => {
               const newVersion = e.target.value
               history.push(`?version=${this.state.version || ''}&compare=${newVersion}`)
