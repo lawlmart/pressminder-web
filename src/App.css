@@ -38,6 +38,30 @@
   
 }
 
+.Publication-screenshot {
+  position: relative;
+}
+
+.Publication-loading {
+  position:absolute;
+  top:5px;
+  right:5px;
+}
+
+.loader {
+  border: 2px solid #f3f3f3; /* Light grey */
+  border-top: 2px solid gray; /* Blue */
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .Publication-screenshot > img {
   width: 100%;
 }
@@ -261,4 +285,17 @@ td.rdtYear:hover {
   width: 100%;
   font-size: 1.2em;
   margin-top: 37px;
+}
+
+.rangeslider-horizontal .rangeslider__fill {
+  background-color: #343a40 !important;
+}
+
+.rangeslider .rangeslider__handle {
+  outline: none !important;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 -1px 1px rgba(0, 0, 0, 0.2) !important;
+}
+
+.rangeslider {
+  display:inline-block;
 }
