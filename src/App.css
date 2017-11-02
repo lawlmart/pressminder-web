@@ -101,6 +101,14 @@
   margin:20px 0px;
 }
 
+.Article-loading {
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /*!
  * https://github.com/YouCanBookMe/react-datetime
  */

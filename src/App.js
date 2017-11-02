@@ -278,8 +278,8 @@ class Article extends Component {
   }
 
   renderArticleDiff() {
-    const article1 = this.getArticle(this.state.version)
-    const article2 = this.getArticle(this.state.comparedVersion)
+    const article2 = this.getArticle(this.state.version)
+    const article1 = this.getArticle(this.state.comparedVersion)
 
     const display = document.getElementById('text')
     display.innerHTML = 
@@ -311,7 +311,7 @@ class Article extends Component {
 
   render() {
     if (this.state.loading) {
-      return (<div>Loading...</div>)
+      return (<div className="Article-loading"><div className="loader"></div></div>)
     }
 
     setTimeout(this.renderArticleDiff.bind(this), 0)
