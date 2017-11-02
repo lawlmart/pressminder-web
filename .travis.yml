@@ -5,7 +5,6 @@ cache:
   yarn: true
   directories:
     - node_modules
-script:
 install:
   - yarn run build
 deploy:
