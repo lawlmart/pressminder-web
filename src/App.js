@@ -8,7 +8,6 @@ import {
   Link  
 } from 'react-router-dom'
 import Slider from 'react-rangeslider'
-import FontAwesome from 'react-fontawesome'
 import createHistory from 'history/createBrowserHistory'
 import queryString from 'query-string'
 import moment from 'moment'
@@ -71,7 +70,7 @@ class Home extends Component {
             date="Nov 2"
             title="I. Above the fold"
             content={(<div>
-              <p>Our first question: at any given time, what are the top headlines on The New York Times and BBC News?</p>
+              <p>Our first question: what are the top headlines on The New York Times and BBC News?</p>
                
               <Link to="/vis1">Here's an example</Link>.
               </div>)}
@@ -79,7 +78,7 @@ class Home extends Component {
           <Post 
             date="Nov 2"
             title="Introduction"
-            content={(<div>PressMinder is a research project by <a href="mailto:lucas@pressminder.org">Lucas Manfield <FontAwesome name='envelope-o'/></a> analyzing the news coverage of major publications. The project comprises a dataset and this blog.  The dataset is a time series constructed by scraping these publications' homepages. This blog will document answers to a series of questions I will pose of the data in the form of interactive visualizations.</div>)}
+            content={(<div>PressMinder is a research project by <a href="mailto:lucas@pressminder.org">Lucas Manfield <i className="fa fa-envelope-o"/></a> analyzing the news coverage of major publications. The project comprises a dataset and this blog.  The dataset is a time series constructed by scraping these publications' homepages. This blog will document answers to a series of questions I will pose of the data in the form of interactive visualizations.</div>)}
           />
         </div>
       </div>
@@ -201,12 +200,12 @@ class Vis1 extends Component {
               }}
             >
               {this.state.playing ? 
-                <FontAwesome
-                  name='pause'
+                <a
+                  className='fa fa-pause'
                 />
               : 
-                <FontAwesome
-                  name='play'
+                <a
+                  className='fa fa-play'
                 />
               }
             </button>
