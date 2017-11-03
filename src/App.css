@@ -1,6 +1,8 @@
-
+a:hover {
+  text-decoration: none !important;
+}
 .Home-header {
-  margin:40px;
+  margin:50px;
   text-align: center;
 }
 .Home-header-logo {
@@ -14,7 +16,7 @@
 }
 
 .Post {
-  margin:10px 0px;
+  margin:10px 0px 50px 0px;
 }
 .Post-header {
   border-bottom:1px solid #ddd;

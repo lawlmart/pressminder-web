@@ -69,8 +69,13 @@ class Home extends Component {
         <div className="Home-posts">
           <Post 
             date="Nov 2"
+            title="I. Above the fold"
+            content={(<div><Link to="/vis1">Here's an example</Link>.</div>)}
+          />
+          <Post 
+            date="Nov 2"
             title="Introduction"
-            content={(<div>PressMinder is a research project by <a href="mailto:lucas@pressminder.org">Lucas Manfield <FontAwesome name='envelope-o'/></a> analyzing what major news publications choose to cover. Future posts will be based largely on a dataset constructed by scraping these publications' websites over time. You can view a visualization of the data <Link to="/vis1">here</Link>.</div>)}
+            content={(<div>PressMinder is a research project by <a href="mailto:lucas@pressminder.org">Lucas Manfield <FontAwesome name='envelope-o'/></a> analyzing the news coverage of major publications. The project comprises a dataset and this blog.  The dataset is a time series constructed by scraping these publications' homepages. This blog will document answers to a series of questions I will pose of the data in the form of interactive visualizations.</div>)}
           />
         </div>
       </div>
