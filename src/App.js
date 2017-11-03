@@ -111,7 +111,7 @@ class Vis1 extends Component {
     super(props);
 
     this.MAX_TIMESTAMP = 3600 * Math.floor(Date.now() / 1000 / 3600)
-    this.MIN_TIMESTAMP = 1509555600
+    this.MIN_TIMESTAMP = 1503301640
 
     const parsed = queryString.parse(history.location.search);
     let parsedTimestamp = null
@@ -121,7 +121,8 @@ class Vis1 extends Component {
     
     this.state = {
       publications: parsed.publications || 'nyt,bbc',
-      snapshot: {},
+      snapshot: null,
+      preloadedSnapshot: null,
       playing: true,
       loading: true,
       timestamp: parsedTimestamp || this.MIN_TIMESTAMP * 1000,
@@ -136,10 +137,22 @@ class Vis1 extends Component {
     return fetch(`https://api.pressminder.org/v1/snapshot/${publications}?count=100${timestamp ? '&timestamp=' + Math.round(timestamp / 1000) : ''}`)
     .then(response => response.json())
     .then(snapshot => {
-      this.setState({snapshot, loading: false})
+      if (!this.state.snapshot) {
+        console.log("first load")
+        this.setState({snapshot, loading: false})
+      } else {
+        for (const key of Object.keys(snapshot)) {
+          this.preloadImage(snapshot[key].screenshot)
+        }
+        this.setState({preloadedSnapshot: snapshot, loading: false})
+      }
     })
   }
 
+  preloadImage(url) {
+    const img = new Image()
+    img.src= url
+  }
 
   componentWillMount() {
     const self = this
@@ -148,6 +161,9 @@ class Vis1 extends Component {
       if (self.state.playing) {
         const newTimestamp = self.state.timestamp + 3600000 
         if (newTimestamp < Date.now()) {
+          if (self.state.preloadedSnapshot) {
+            self.setState({snapshot: self.state.preloadedSnapshot})
+          }
           self.fetch(newTimestamp)
         } else {
           self.setState({playing: false, replayable: true})
@@ -232,6 +248,7 @@ class Vis1 extends Component {
             </button>
           </div>
         </div>
+        {this.state.snapshot ?
         <div className="Vis1-content">
           {Object.keys(this.state.snapshot).map(id => {
             return (
@@ -239,11 +256,12 @@ class Vis1 extends Component {
                 key={id}
                 articles={this.state.snapshot[id].articles}
                 screenshot={this.state.snapshot[id].screenshot}
-                loading={this.state.loading}
+                loading={false}
               />
             )
           })}
         </div>
+        : ''}
       </div>
     )
   }
