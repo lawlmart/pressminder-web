@@ -13,7 +13,8 @@ import queryString from 'query-string'
 import moment from 'moment'
 import Select from 'react-select';
 import 'react-rangeslider/lib/index.css'
-import 'react-select/dist/react-select.css';
+import 'react-select/dist/react-select.css'
+import _ from 'lodash'
 const jsdiff = require('diff')
 const history = createHistory()
 
@@ -141,6 +142,8 @@ class Vis1 extends Component {
       timestamp: parsedTimestamp || this.MIN_TIMESTAMP * 1000,
       replayable: !parsedTimestamp
     }
+
+    this.throttledFetch = _.throttle(this.fetch, 500, {leading: true, trailing: true})
   }
 
   fetch(timestamp, publications) {
@@ -150,8 +153,7 @@ class Vis1 extends Component {
     return fetch(`https://api.pressminder.org/v1/snapshot/${publications}?count=100${timestamp ? '&timestamp=' + Math.round(timestamp / 1000) : ''}`)
     .then(response => response.json())
     .then(snapshot => {
-      if (!this.state.snapshot) {
-        console.log("first load")
+      if (!this.state.snapshot || !this.state.playing) {
         this.setState({snapshot, loading: false})
       } else {
         for (const key of Object.keys(snapshot)) {
@@ -220,7 +222,8 @@ class Vis1 extends Component {
               dateFormat="LL"
               onChange={momentObj => {
                 if (momentObj.unix) {
-                  this.fetch(momentObj.unix() * 1000)
+                  this.setState({timestamp: momentObj.unix() * 1000, loading: true})
+                  this.throttledFetch(momentObj.unix() * 1000)
                 }
               }}
             />
@@ -232,8 +235,8 @@ class Vis1 extends Component {
               orientation="horizontal"
               tooltip={false}
               onChange={value => {
-                this.setState({replayable: value === this.MAX_TIMESTAMP})
-                this.fetch(value * 1000)
+                this.setState({timestamp: value * 1000, loading: true, replayable: value === this.MAX_TIMESTAMP})
+                this.throttledFetch(value * 1000)
               }}
             />
             <button
