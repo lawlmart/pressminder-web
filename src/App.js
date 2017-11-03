@@ -68,9 +68,16 @@ class Home extends Component {
         <div className="Home-posts">
           <Post 
             date="Nov 2"
-            title="III. The News Cycle"
+            title="Introduction"
+            content={(<div>PressMinder is a research project by <a href="mailto:lucas@pressminder.org">Lucas Manfield <i className="fa fa-envelope-o"/></a> analyzing "mainstream media" news coverage. The project comprises a dataset and this blog. The dataset is a time series constructed by periodically scraping the homepages of The New York Times, BBC News, The Washington Post and more to come. Over the next several months I'll be interrogating the data and presenting the results in the form of interactive visualizations.</div>)}
+          />
+          <Post 
+            date="Nov 2"
+            title="I. Above the fold"
             content={(<div>
-
+              <p>The first question: what are the top headlines?</p>
+               
+              <Link to="/vis1">View visualization</Link>.
               </div>)}
           />
           <Post 
@@ -82,17 +89,17 @@ class Home extends Component {
           />
           <Post 
             date="Nov 2"
-            title="I. Above the fold"
+            title="III. The News Cycle"
             content={(<div>
-              <p>Our first question: what are the top headlines on The New York Times and BBC News?</p>
-               
-              <Link to="/vis1">Here's an example</Link>.
+
               </div>)}
           />
           <Post 
             date="Nov 2"
-            title="Introduction"
-            content={(<div>PressMinder is a research project by <a href="mailto:lucas@pressminder.org">Lucas Manfield <i className="fa fa-envelope-o"/></a> analyzing the news coverage of major publications. The project comprises a dataset and this blog.  The dataset is a time series constructed by scraping these publications' homepages. This blog will document answers to a series of questions I will pose of the data in the form of interactive visualizations.</div>)}
+            title="IV. Beat Reporting"
+            content={(<div>
+
+              </div>)}
           />
         </div>
       </div>
@@ -101,25 +108,25 @@ class Home extends Component {
 }
 class Vis1 extends Component {
   constructor(props) {
+    super(props);
+
+    this.MAX_TIMESTAMP = 3600 * Math.floor(Date.now() / 1000 / 3600)
+    this.MIN_TIMESTAMP = 1509555600
 
     const parsed = queryString.parse(history.location.search);
     let parsedTimestamp = null
     if (parsed.timestamp) {
       parsedTimestamp = parseInt(parsed.timestamp, 10) * 1000
     }
-
-    super(props);
+    
     this.state = {
       publications: parsed.publications || 'nyt,bbc',
       snapshot: {},
-      playing: false,
+      playing: true,
       loading: true,
-      timestamp: parsedTimestamp || null,
+      timestamp: parsedTimestamp || this.MIN_TIMESTAMP * 1000,
       replayable: !parsedTimestamp
     }
-    
-    this.MAX_TIMESTAMP = 3600 * Math.floor(Date.now() / 1000 / 3600)
-    this.MIN_TIMESTAMP = 1509555600
   }
 
   fetch(timestamp, publications) {
@@ -136,9 +143,7 @@ class Vis1 extends Component {
 
   componentWillMount() {
     const self = this
-
-    let timestamp = this.state.timestamp || 3600000 * Math.floor(Date.now() / 3600000)
-    this.fetch(timestamp)
+    this.fetch(this.state.timestamp)
     this.fetchInterval = setInterval(() => {
       if (self.state.playing) {
         const newTimestamp = self.state.timestamp + 3600000 
@@ -170,8 +175,10 @@ class Vis1 extends Component {
               clearable={false}
               options={[
                 { value: 'nyt', label: 'New York Times' },
-                { value: 'bbc', label: 'BBC News' },
                 { value: 'wapo', label: 'The Washington Post' },
+                { value: 'bbc', label: 'BBC News' },  
+                { value: 'guardian', label: 'The Guardian' },
+                { value: 'cnn', label: 'CNN' },
               ]}
               onChange={value => {
                 this.fetch(this.state.timestamp, value)

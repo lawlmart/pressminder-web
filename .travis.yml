@@ -1,10 +1,15 @@
 language: node_js
+sudo: required
+dist: trusty
 node_js:
-  - 8
+  - 6
 cache:
-  yarn: true
   directories:
     - node_modules
+before_install:
+  - sudo apt-get -y install python-pip python-dev
+  - pip install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
 script:
   - yarn && yarn run build
 deploy:

@@ -16,7 +16,7 @@ a:hover {
 }
 
 .Post {
-  margin:10px 0px 50px 0px;
+  margin:10px 10px 50px 10px;
 }
 .Post-header {
   border-bottom:1px solid #ddd;
@@ -34,7 +34,7 @@ a:hover {
   color: #333;
 }
 .Post-content {
-  margin-top:10px;
+  margin-top:15px;
 }
 
 
