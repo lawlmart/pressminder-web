@@ -1,3 +1,41 @@
+
+.Home-header {
+  margin:40px;
+  text-align: center;
+}
+.Home-header-logo {
+  font-family: 'Vesper Libre', serif;
+  line-height:1em;
+  font-size:40px;
+}
+.Home-posts {
+  max-width:700px;
+  margin:0px auto;
+}
+
+.Post {
+  margin:10px 0px;
+}
+.Post-header {
+  border-bottom:1px solid #ddd;
+  
+}
+.Post-date {
+  float: right;
+  color: #aaa;
+  font-size:14px;
+}
+.Post-title {
+  display:inline;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #333;
+}
+.Post-content {
+  margin-top:10px;
+}
+
+
 .Vis1 {
   margin:10px auto;
 }
@@ -21,12 +59,12 @@
 }
 
 .Header-datetime-control-input {
-  width:100%;
+  width:180px;
   text-align: center;
 }
 
 .Header-control-publications {
-  width:320px;
+  width:300px;
   margin-right:10px;
 }
 

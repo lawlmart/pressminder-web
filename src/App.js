@@ -36,8 +36,13 @@ class Post extends Component {
   render() {
     return (
       <div className="Post">
-        <div className="Post-title">
-          {this.props.title}
+        <div className="Post-header">
+          <div className="Post-title">
+            {this.props.title}
+          </div>
+          <div className="Post-date">
+            {this.props.date}
+          </div>
         </div>
         <div className="Post-content">
           {this.props.content}
@@ -63,8 +68,9 @@ class Home extends Component {
         </div>
         <div className="Home-posts">
           <Post 
+            date="Nov 2"
             title="Introduction"
-            content={(<Link to="/vis1">Visualization 1</Link>)}
+            content={(<div>PressMinder is a research project by <a href="mailto:lucas@pressminder.org">Lucas Manfield <FontAwesome name='envelope-o'/></a> analyzing what major news publications choose to cover. Future posts will be based largely on a dataset constructed by scraping these publications' websites over time. You can view a visualization of the data <Link to="/vis1">here</Link>.</div>)}
           />
         </div>
       </div>
