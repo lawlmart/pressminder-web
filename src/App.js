@@ -12,11 +12,11 @@ import FontAwesome from 'react-fontawesome'
 import createHistory from 'history/createBrowserHistory'
 import queryString from 'query-string'
 import moment from 'moment'
+import Select from 'react-select';
 import 'react-rangeslider/lib/index.css'
+import 'react-select/dist/react-select.css';
 const jsdiff = require('diff')
 const history = createHistory()
-
-const ARTICLE_COUNT = 10
 
 class App extends Component {
   render() {
@@ -94,10 +94,11 @@ class Vis1 extends Component {
     this.MIN_TIMESTAMP = 1509555600
   }
 
-  fetch(timestamp) {
-    history.replace(`/vis1?publications=${this.state.publications}&timestamp=${timestamp / 1000}`)
-    this.setState({timestamp, loading: true})
-    return fetch(`https://api.pressminder.org/v1/snapshot/${this.state.publications}?count=100${timestamp ? '&timestamp=' + Math.round(timestamp / 1000) : ''}`)
+  fetch(timestamp, publications) {
+    publications = publications || this.state.publications
+    history.replace(`/vis1?publications=${publications}&timestamp=${timestamp / 1000}`)
+    this.setState({timestamp, publications, loading: true})
+    return fetch(`https://api.pressminder.org/v1/snapshot/${publications}?count=100${timestamp ? '&timestamp=' + Math.round(timestamp / 1000) : ''}`)
     .then(response => response.json())
     .then(snapshot => {
       this.setState({snapshot, loading: false})
@@ -132,8 +133,25 @@ class Vis1 extends Component {
       <div className="Vis1">
         <div className="Vis1-header">
           <div className="Header-controls">
+            <Select
+              className="Header-control-publications"
+              name="publications"
+              value={this.state.publications}
+              simpleValue={true}
+              multi={true}
+              clearable={false}
+              options={[
+                { value: 'nyt', label: 'New York Times' },
+                { value: 'bbc', label: 'BBC News' },
+                { value: 'wapo', label: 'The Washington Post' },
+              ]}
+              onChange={value => {
+                this.fetch(this.state.timestamp, value)
+              }}
+            />
             <Datetime
               className="Header-datetime-control"
+              inputProps={{className: "form-control Header-datetime-control-input"}}
               value={new Date(this.state.timestamp)}
               onChange={momentObj => {
                 if (momentObj.unix) {
@@ -141,8 +159,20 @@ class Vis1 extends Component {
                 }
               }}
             />
+            <Slider
+              min={this.MIN_TIMESTAMP}
+              max={this.MAX_TIMESTAMP}
+              step={3600}
+              value={this.state.timestamp / 1000}
+              orientation="horizontal"
+              tooltip={false}
+              onChange={value => {
+                this.setState({replayable: value === this.MAX_TIMESTAMP})
+                this.fetch(value * 1000)
+              }}
+            />
             <button
-              className="btn btn-dark Header-button-control"
+              className="Header-button-control"
               onClick={() => {
                 if (this.state.playing) {
                   this.setState({playing: false})
@@ -165,18 +195,6 @@ class Vis1 extends Component {
                 />
               }
             </button>
-            <Slider
-              min={this.MIN_TIMESTAMP}
-              max={this.MAX_TIMESTAMP}
-              step={3600}
-              value={this.state.timestamp / 1000}
-              orientation="horizontal"
-              tooltip={false}
-              onChange={value => {
-                this.setState({replayable: value === this.MAX_TIMESTAMP})
-                this.fetch(value * 1000)
-              }}
-            />
           </div>
         </div>
         <div className="Vis1-content">
@@ -283,7 +301,7 @@ class ArticleLink extends Component {
           to={'/article/' + encodeURIComponent(this.props.url)}
           className="ArticleLink-title"
         >
-          {this.props.title} - {this.props.score}
+          {this.props.title}
         </Link>
       </div>
     )

@@ -3,19 +3,21 @@
 }
 
 .Vis1-content {
-  display:flex;
-  justify-content: center;
+  text-align: center;
 }
 
 .Vis1-header {
-
+  margin:20px;
 }
 
 .Header-controls {
   display: flex;
-  height: 38px;
   align-items: center;
   justify-content: center;
+  border-bottom: 1px solid rgb(220, 220, 220);
+  max-width:900px;
+  margin:0px auto;
+  padding-bottom:25px;
 }
 
 .Header-datetime-control-input {
@@ -23,8 +25,28 @@
   text-align: center;
 }
 
+.Header-control-publications {
+  width:320px;
+  margin-right:10px;
+}
+
 .Header-button-control {
-  margin:0px 10px;
+  background: none;
+  border: none;
+  color: black;
+  font-size:24px;
+  cursor: pointer;
+  margin:0px;
+  position:relative;
+  top:1px;
+}
+.Header-button-control:focus {
+  outline: none;
+}
+.Header-button-control:hover {
+  background: none;
+  border: none;
+  color: gray;
 }
 
 .ArticleLink {
@@ -32,16 +54,25 @@
 }
 
 .ArticleLink a {
-  font-size:12px;
+  font-size:14px;
   color: black;
 }
 
-.Publication-articles {
-  
+.Publication {
+  margin:20px;
+  width:400px;
+  display: inline-block;
+  text-align: left;
+  vertical-align: top;
 }
 
 .Publication-screenshot {
   position: relative;
+  overflow: hidden;
+}
+
+.Publication-articles {
+  margin-top:20px;
 }
 
 .Publication-loading {
@@ -66,11 +97,6 @@
 
 .Publication-screenshot > img {
   width: 100%;
-}
-
-.Publication {
-  margin:10px;
-  width:400px;
 }
 
 .Publication-screenshot-overlay {
@@ -346,4 +372,18 @@ td.rdtYear:hover {
   min-width:200px;
   display:inline-block;
   margin:0px 20px !important; 
+}
+
+.Select-control {
+  height:38px !important;
+}
+
+.Select-value {
+  color: black !important;
+  background-color: rgba(200, 200, 200, 0.2) !important;
+  border-color: rgba(0, 0, 0, 0.24) !important;
+}
+
+.Select-value-icon {
+  border-right: 1px solid rgba(0, 0, 0, 0.24) !important;
 }
