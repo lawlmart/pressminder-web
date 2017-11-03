@@ -61,12 +61,12 @@ a:hover {
 }
 
 .Header-datetime-control-input {
-  width:180px;
+  width:240px;
   text-align: center;
 }
 
 .Header-control-publications {
-  width:300px;
+  width:250px;
   margin-right:10px;
 }
 
@@ -409,7 +409,7 @@ td.rdtYear:hover {
 }
 
 .rangeslider {
-  min-width:200px;
+  min-width:240px;
   display:inline-block;
   margin:0px 20px !important; 
 }

@@ -71,13 +71,17 @@ class Home extends Component {
             title="Introduction"
             content={(<div>PressMinder is a research project by <a href="mailto:lucas@pressminder.org">Lucas Manfield <i className="fa fa-envelope-o"/></a> analyzing "mainstream media" news coverage. The project comprises a dataset and this blog. The dataset is a time series constructed by periodically scraping the homepages of The New York Times, BBC News, The Washington Post and more to come. Over the next several months I'll be interrogating the data and presenting the results in the form of interactive visualizations.</div>)}
           />
+          <Post
+            date="Nov 3"
+            title="Dataset"
+            content={(<div>If you're wondering where to start, spend some time playing with <Link to="/vis1">the data</Link>.</div>)}
+          />
           <Post 
             date="Nov 2"
             title="I. Above the fold"
             content={(<div>
               <p>The first question: what are the top headlines?</p>
-               
-              <Link to="/vis1">View visualization</Link>.
+
               </div>)}
           />
           <Post 
@@ -101,6 +105,13 @@ class Home extends Component {
 
               </div>)}
           />
+          <Post 
+            date="Nov 2"
+            title="V. Bumping Heads"
+            content={(<div>
+
+              </div>)}
+          />
         </div>
       </div>
     )
@@ -111,7 +122,7 @@ class Vis1 extends Component {
     super(props);
 
     this.MAX_TIMESTAMP = 3600 * Math.floor(Date.now() / 1000 / 3600)
-    this.MIN_TIMESTAMP = 1503301640
+    this.MIN_TIMESTAMP = 1503302400
 
     const parsed = queryString.parse(history.location.search);
     let parsedTimestamp = null
@@ -120,7 +131,7 @@ class Vis1 extends Component {
     }
     
     this.state = {
-      publications: parsed.publications || 'nyt,bbc',
+      publications: parsed.publications || 'nyt,wapo,bbc',
       snapshot: null,
       preloadedSnapshot: null,
       playing: true,
@@ -190,10 +201,10 @@ class Vis1 extends Component {
               multi={true}
               clearable={false}
               options={[
-                { value: 'nyt', label: 'New York Times' },
-                { value: 'wapo', label: 'The Washington Post' },
-                { value: 'bbc', label: 'BBC News' },  
-                { value: 'guardian', label: 'The Guardian' },
+                { value: 'nyt', label: 'NYT' },
+                { value: 'wapo', label: 'WaPo' },
+                { value: 'bbc', label: 'BBC' },  
+                { value: 'guardian', label: 'Guardian' },
                 { value: 'cnn', label: 'CNN' },
               ]}
               onChange={value => {
@@ -204,6 +215,7 @@ class Vis1 extends Component {
               className="Header-datetime-control"
               inputProps={{className: "form-control Header-datetime-control-input"}}
               value={new Date(this.state.timestamp)}
+              dateFormat="LL"
               onChange={momentObj => {
                 if (momentObj.unix) {
                   this.fetch(momentObj.unix() * 1000)
@@ -322,7 +334,7 @@ class Publication extends Component {
           appearAnimation="fade"
           className="Publication-articles"
         >
-          {this.props.articles.slice(0,10).map(article => {
+          {this.props.articles.slice(0,25).map(article => {
             return (
               <ArticleLink
                 key={`${article.url}-${article.since}`}
