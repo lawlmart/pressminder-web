@@ -76,6 +76,7 @@ class Home extends Component {
             title="Dataset"
             content={(<div>If you're wondering where to start, spend some time playing with <Link to="/vis1">the data</Link>.</div>)}
           />
+          {/*}
           <Post 
             date="Nov 2"
             title="I. Above the fold"
@@ -112,6 +113,7 @@ class Home extends Component {
 
               </div>)}
           />
+          */}
         </div>
       </div>
     )
