@@ -70,7 +70,11 @@ class Home extends Component {
           <Post 
             date="Nov 2"
             title="I. Above the fold"
-            content={(<div><Link to="/vis1">Here's an example</Link>.</div>)}
+            content={(<div>
+              <p>Our first question: at any given time, what are the top headlines on The New York Times and BBC News?</p>
+               
+              <Link to="/vis1">Here's an example</Link>.
+              </div>)}
           />
           <Post 
             date="Nov 2"
