@@ -16,17 +16,7 @@ import 'react-rangeslider/lib/index.css'
 const jsdiff = require('diff')
 const history = createHistory()
 
-const ARTICLE_COUNT = 20
-
-async function fetchSnapshot(names, timestamp) {
-  return fetch(`https://api.pressminder.org/v1/snapshot/${names.join(',')}?count=${ARTICLE_COUNT}${timestamp ? '&timestamp=' + Math.round(timestamp / 1000) : ''}`)
-  .then(response => response.json())
-}
-
-async function fetchArticle(url) {
-  return fetch(`https://api.pressminder.org/v1/article/${encodeURIComponent(url)}`)
-  .then(response => response.json())
-}
+const ARTICLE_COUNT = 10
 
 class App extends Component {
   render() {
@@ -34,6 +24,7 @@ class App extends Component {
       <Router>
         <div className="App">
           <Route exact path="/" component={Home}/>
+          <Route exact path="/vis1" component={Vis1}/>
           <Route path="/article/:url" component={Article}/>
         </div>
       </Router>
@@ -41,7 +32,46 @@ class App extends Component {
   }
 }
 
+class Post extends Component {
+  render() {
+    return (
+      <div className="Post">
+        <div className="Post-title">
+          {this.props.title}
+        </div>
+        <div className="Post-content">
+          {this.props.content}
+        </div>
+      </div>
+    )
+  }
+}
+
 class Home extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+    
+    }
+  }
+  render() {
+    return (
+      <div className="Home">
+        <div className="Home-header">
+          <span className="Home-header-logo">PressMinder</span>
+        </div>
+        <div className="Home-posts">
+          <Post 
+            title="Introduction"
+            content={(<Link to="/vis1">Visualization 1</Link>)}
+          />
+        </div>
+      </div>
+    )
+  }
+}
+class Vis1 extends Component {
   constructor(props) {
 
     const parsed = queryString.parse(history.location.search);
@@ -52,20 +82,23 @@ class Home extends Component {
 
     super(props);
     this.state = {
+      publications: parsed.publications || 'nyt,bbc',
       snapshot: {},
       playing: false,
       loading: true,
       timestamp: parsedTimestamp || null,
       replayable: !parsedTimestamp
     }
+    
     this.MAX_TIMESTAMP = 3600 * Math.floor(Date.now() / 1000 / 3600)
-    this.MIN_TIMESTAMP = this.MAX_TIMESTAMP - 604800
+    this.MIN_TIMESTAMP = 1509555600
   }
 
   fetch(timestamp) {
-    history.push('?timestamp=' + (timestamp / 1000))
+    history.replace(`/vis1?publications=${this.state.publications}&timestamp=${timestamp / 1000}`)
     this.setState({timestamp, loading: true})
-    fetchSnapshot(['nyt', 'bbc'], timestamp)
+    return fetch(`https://api.pressminder.org/v1/snapshot/${this.state.publications}?count=100${timestamp ? '&timestamp=' + Math.round(timestamp / 1000) : ''}`)
+    .then(response => response.json())
     .then(snapshot => {
       this.setState({snapshot, loading: false})
     })
@@ -96,8 +129,8 @@ class Home extends Component {
 
   render() {
     return (
-      <div className="Home">
-        <div className="Home-header">
+      <div className="Vis1">
+        <div className="Vis1-header">
           <div className="Header-controls">
             <Datetime
               className="Header-datetime-control"
@@ -146,7 +179,7 @@ class Home extends Component {
             />
           </div>
         </div>
-        <div className="Home-content">
+        <div className="Vis1-content">
           {Object.keys(this.state.snapshot).map(id => {
             return (
               <Publication
@@ -186,18 +219,26 @@ class Publication extends Component {
             src={`https://d1qd36z8dssjk5.cloudfront.net/${this.props.screenshot}`}
             onLoad={() => this.setState({imageLoaded: true})}
           />
-          {this.state.selected ?
-            <div
-              className="Publication-selected"
-              style={{
-                left: this.state.selected.left / RATIO,
-                top: this.state.selected.top / RATIO,
-                width: this.state.selected.width / RATIO,
-                height: this.state.selected.height / RATIO
-              }}
-            >
-            </div>
-          : ''}
+          {this.props.articles.map(article => {
+            return (
+              <Link
+                to={'/article/' + encodeURIComponent(article.url)}
+                className={`Publication-screenshot-overlay ${this.state.selected === article ? 'selected' : ''}`}
+                style={{
+                  left: article.left / RATIO,
+                  top: article.top / RATIO,
+                  width: article.width / RATIO,
+                  height: article.height / RATIO
+                }}
+                onMouseEnter={(e) => {
+                  this.setState({selected: article})
+                }}
+                onMouseLeave={(e) => {
+                  this.setState({selected: null})
+                }}
+              />
+              )
+          })}
           {this.props.loading || !this.state.imageLoaded ?
             <div className="Publication-loading">
               <div className="loader"></div>
@@ -210,7 +251,7 @@ class Publication extends Component {
           appearAnimation="fade"
           className="Publication-articles"
         >
-          {this.props.articles.map(article => {
+          {this.props.articles.slice(0,10).map(article => {
             return (
               <ArticleLink
                 key={`${article.url}-${article.since}`}
@@ -242,7 +283,7 @@ class ArticleLink extends Component {
           to={'/article/' + encodeURIComponent(this.props.url)}
           className="ArticleLink-title"
         >
-          {this.props.title}
+          {this.props.title} - {this.props.score}
         </Link>
       </div>
     )
@@ -263,7 +304,9 @@ class Article extends Component {
   }
 
   componentWillMount() {
-    fetchArticle(decodeURIComponent(this.props.match.params.url))
+    const url = decodeURIComponent(this.props.match.params.url)
+    return fetch(`https://api.pressminder.org/v1/article/${encodeURIComponent(url)}`)
+    .then(response => response.json())
     .then(versions => {
       this.setState({versions, loading: false})
     })
@@ -296,7 +339,11 @@ class Article extends Component {
       )
     }
     </div>
-    <div class="Article-content">${this.renderTextDiff(article1.text, article2.text).replace(/\n/g,'<br/>')}</div>
+    <div class="Article-content">
+      <p>
+        ${this.renderTextDiff(article1.text, article2.text).replace(/\n/g,'</p></p>')}
+      </p>   
+    </div>
     `
   }
 
@@ -332,7 +379,7 @@ class Article extends Component {
           >
             {this.state.versions.map(version => {
               return (
-                <option key={"version-" + version.timestamp} value={version.timestamp}>{moment.unix(version.timestamp).format('LLLL')}</option>
+                <option key={"version-" + version.timestamp} value={version.timestamp}>{moment.unix(version.timestamp).format('LLL')}</option>
               )
             })}
           </select>
@@ -348,7 +395,7 @@ class Article extends Component {
           >
             {this.state.versions.map(version => {
               return (
-                <option key={"compare-" + version.timestamp} value={version.timestamp}>{moment.unix(version.timestamp).format('LLLL')}</option>
+                <option key={"compare-" + version.timestamp} value={version.timestamp}>{moment.unix(version.timestamp).format('LLL')}</option>
               )
             })}
           </select>

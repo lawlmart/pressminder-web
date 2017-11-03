@@ -1,14 +1,13 @@
-.Home {
+.Vis1 {
   margin:10px auto;
-  
 }
 
-.Home-content {
+.Vis1-content {
   display:flex;
   justify-content: center;
 }
 
-.Home-header {
+.Vis1-header {
 
 }
 
@@ -30,6 +29,11 @@
 
 .ArticleLink {
   background-color: white;
+}
+
+.ArticleLink a {
+  font-size:12px;
+  color: black;
 }
 
 .Publication-articles {
@@ -69,9 +73,14 @@
   width:400px;
 }
 
-.Publication-selected {
-  border: 2px solid red;
+.Publication-screenshot-overlay {
   position: absolute;
+  border: 2px solid rgba(255,0,0,.1);
+  cursor: pointer;
+  display: block;
+}
+.Publication-screenshot-overlay.selected {
+  border: 2px solid red;
 }
 
 .Article {
