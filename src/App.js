@@ -68,6 +68,20 @@ class Home extends Component {
         <div className="Home-posts">
           <Post 
             date="Nov 2"
+            title="III. The News Cycle"
+            content={(<div>
+
+              </div>)}
+          />
+          <Post 
+            date="Nov 2"
+            title="II. Living Documents"
+            content={(<div>
+
+              </div>)}
+          />
+          <Post 
+            date="Nov 2"
             title="I. Above the fold"
             content={(<div>
               <p>Our first question: what are the top headlines on The New York Times and BBC News?</p>
@@ -200,11 +214,11 @@ class Vis1 extends Component {
               }}
             >
               {this.state.playing ? 
-                <a
+                <i
                   className='fa fa-pause'
                 />
               : 
-                <a
+                <i
                   className='fa fa-play'
                 />
               }
