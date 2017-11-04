@@ -419,13 +419,22 @@ class Article extends Component {
     display.innerHTML = 
     `
     <div class="Article-title">${this.renderTextDiff(article1.title, article2.title)}</div>
-    <div class="Article-authors">
-    ${
-      this.renderTextDiff(
-        article1.authors ? article1.authors.join(', '): '',
-        article2.authors ? article2.authors.join(', '): ''
-      )
-    }
+    <div class="Article-subhead">
+      <span class="Article-authors">
+      ${article1.authors.length || article2.authors.length ? 'By ' : ''} 
+      ${
+        this.renderTextDiff(
+          article1.authors ? article1.authors.join(', '): '',
+          article2.authors ? article2.authors.join(', '): ''
+        )
+      }
+      </span>
+      <span class="Article-published">
+      ${article1.published ? moment.unix(article1.published).format('LLL') : ''}
+      </span>
+      <a href="${article1.url}" class="Article-link" target="_blank">
+        <i class="fa fa-external-link" style="position: relative; left: -2px; top: 1px;"></i> View original
+      </a>
     </div>
     <div class="Article-content">
       <p>
@@ -461,7 +470,7 @@ class Article extends Component {
             className="form-control Article-controls-version"
             onChange={e => {
               const newVersion = e.target.value
-              history.push(`?version=${newVersion}&compare=${this.state.comparedVersion || ''}`)
+              history.replace(`?version=${newVersion}&compare=${this.state.comparedVersion || ''}`)
               this.setState({version: newVersion})
             }}
           >
@@ -477,7 +486,7 @@ class Article extends Component {
             className="form-control Article-controls-version"
             onChange={e => {
               const newVersion = e.target.value
-              history.push(`?version=${this.state.version || ''}&compare=${newVersion}`)
+              history.replace(`?version=${this.state.version || ''}&compare=${newVersion}`)
               this.setState({comparedVersion: newVersion})
             }}
           >

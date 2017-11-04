@@ -160,25 +160,49 @@ a:hover {
 }
 
 .Article-controls-version {
-  max-width:300px;
+  max-width:220px;
   display:inline-block;
-  margin:0px 10px;
+  margin:0px 20px;
 }
 
 .Article-text {
-  margin:10px auto;
+  margin:30px auto;
   max-width:900px;
+}
+
+.Article-content {
   text-align: justify;
 }
 
 .Article-title {
-  font-size:22px;
-  margin:20px 0px;
+  font-size:26px;
+  border-bottom: 1px solid rgb(220, 220, 220);
+  padding-bottom:5px;
+  margin-bottom:10px;
+}
+
+.Article-subhead {
+  margin-bottom:25px;
+  font-size:14px;
+}
+
+.Article-published {
+  color: #888;
+  margin-left:15px;
+}
+
+.Article-link {
+ margin-left:15px; 
+ color: #888;
+}
+
+.Article-link:hover {
+  color: black;
 }
 
 .Article-loading {
-  width:100%;
-  height:100%;
+  width:100vw;
+  height:100vh;
   display:flex;
   align-items: center;
   justify-content: center;
