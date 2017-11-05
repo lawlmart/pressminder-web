@@ -70,7 +70,7 @@ class Home extends Component {
           <Post 
             date="Nov 2"
             title="Introduction"
-            content={(<div>PressMinder is a research project by <a href="mailto:lucas@pressminder.org">Lucas Manfield <i className="fa fa-envelope-o"/></a> analyzing "mainstream media" news coverage. The project comprises a dataset and this blog. The dataset is a time series constructed by periodically scraping the homepages of The New York Times, BBC News, The Washington Post and more to come. Over the next several months I'll be interrogating the data and presenting the results in the form of interactive visualizations.</div>)}
+            content={(<div>PressMinder is a research project by <a href="mailto:lucas@pressminder.org">Lucas Manfield <i className="fa fa-envelope-o"/></a> analyzing "mainstream media" news coverage. The project comprises a dataset and this blog. The dataset is a time series constructed by periodically scraping the homepages of The New York Times, BBC News, The Washington Post and more to come. Over the next several months I'll be creating a series of interactive visualizations from the data.</div>)}
           />
           <Post
             date="Nov 3"
@@ -139,7 +139,7 @@ class Vis1 extends Component {
       preloadedSnapshot: null,
       playing: true,
       loading: true,
-      timestamp: parsedTimestamp || this.MIN_TIMESTAMP * 1000,
+      timestamp: parsedTimestamp || (this.MAX_TIMESTAMP - 3600 * 24 * 7) * 1000,
       replayable: !parsedTimestamp
     }
 
