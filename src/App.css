@@ -50,6 +50,12 @@ a:hover {
   margin:20px;
 }
 
+.Vis1-loading {
+  text-align: center;
+  margin:50px;
+  font-size:16px;
+}
+
 .Header-controls {
   display: flex;
   align-items: center;

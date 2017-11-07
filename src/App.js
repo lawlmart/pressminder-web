@@ -138,6 +138,7 @@ class Vis1 extends Component {
       snapshot: null,
       preloadedSnapshot: null,
       playing: true,
+      firstLoad: true,
       loading: true,
       timestamp: parsedTimestamp || (this.MAX_TIMESTAMP - 3600 * 24 * 7) * 1000,
       replayable: !parsedTimestamp
@@ -154,12 +155,12 @@ class Vis1 extends Component {
     .then(response => response.json())
     .then(snapshot => {
       if (!this.state.snapshot || !this.state.playing) {
-        this.setState({snapshot, loading: false})
+        this.setState({snapshot, loading: false, firstLoad: false})
       } else {
         for (const key of Object.keys(snapshot)) {
           this.preloadImage(snapshot[key].screenshot)
         }
-        this.setState({preloadedSnapshot: snapshot, loading: false})
+        this.setState({preloadedSnapshot: snapshot, loading: false, firstLoad: false})
       }
     })
   }
@@ -173,7 +174,7 @@ class Vis1 extends Component {
     const self = this
     this.fetch(this.state.timestamp)
     this.fetchInterval = setInterval(() => {
-      if (self.state.playing) {
+      if (self.state.playing && !self.state.firstLoad) {
         const newTimestamp = self.state.timestamp + 3600000 
         if (newTimestamp < Date.now()) {
           if (self.state.preloadedSnapshot) {
@@ -266,18 +267,21 @@ class Vis1 extends Component {
           </div>
         </div>
         {this.state.snapshot ?
-        <div className="Vis1-content">
-          {Object.keys(this.state.snapshot).map(id => {
-            return (
-              <Publication
-                key={id}
-                articles={this.state.snapshot[id].articles}
-                screenshot={this.state.snapshot[id].screenshot}
-                loading={false}
-              />
-            )
-          })}
-        </div>
+          <div className="Vis1-content">
+            {this.state.firstLoad ?
+              <div className="Vis1-loading">Loading ...</div>
+            : ''}
+            {Object.keys(this.state.snapshot).map(id => {
+              return (
+                <Publication
+                  key={id}
+                  articles={this.state.snapshot[id].articles}
+                  screenshot={this.state.snapshot[id].screenshot}
+                  loading={false}
+                />
+              )
+            })}
+          </div>
         : ''}
       </div>
     )
@@ -327,7 +331,7 @@ class Publication extends Component {
               />
               )
           })}
-          {this.props.loading || !this.state.imageLoaded ?
+          {this.props.loading ?
             <div className="Publication-loading">
               <div className="loader"></div>
             </div>
