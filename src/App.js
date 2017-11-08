@@ -223,7 +223,11 @@ class Vis1 extends Component {
               dateFormat="LL"
               onChange={momentObj => {
                 if (momentObj.unix) {
-                  this.setState({timestamp: momentObj.unix() * 1000, loading: true})
+                  this.setState({
+                    timestamp: momentObj.unix() * 1000,
+                    loading: true,
+                    playing: false
+                  })
                   this.throttledFetch(momentObj.unix() * 1000)
                 }
               }}
@@ -236,7 +240,12 @@ class Vis1 extends Component {
               orientation="horizontal"
               tooltip={false}
               onChange={value => {
-                this.setState({timestamp: value * 1000, loading: true, replayable: value === this.MAX_TIMESTAMP})
+                this.setState({
+                  timestamp: value * 1000,
+                  loading: true,
+                  replayable: value === this.MAX_TIMESTAMP,
+                  playing: false
+                })
                 this.throttledFetch(value * 1000)
               }}
             />
