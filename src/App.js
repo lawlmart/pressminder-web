@@ -209,20 +209,26 @@ class Vis1 extends Component {
           keyEventName={KEYDOWN}
           keyValue="ArrowRight"
           onKeyHandle={() => {
-            this.setState({
-              playing: false
-            })
-            this.fetch(this.state.timestamp + INTERVAL)
+            const newTimestamp = this.state.timestamp + INTERVAL
+            if (newTimestamp < Date.now()) {
+              this.setState({
+                playing: false
+              })
+              this.fetch(newTimestamp)
+            }
           }} 
         />
         <KeyHandler
           keyEventName={KEYDOWN}
           keyValue="ArrowLeft"
           onKeyHandle={() => {
-            this.setState({
-              playing: false
-            })
-            this.fetch(this.state.timestamp - INTERVAL)
+            const newTimestamp = this.state.timestamp - INTERVAL
+            if (newTimestamp < Date.now()) {
+              this.setState({
+                playing: false
+              })
+              this.fetch(newTimestamp)
+            }
           }} 
         />
         <div className="Vis1-header">
