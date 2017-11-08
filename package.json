@@ -12,6 +12,7 @@
     "react-dom": "^16.0.0",
     "react-flip-move": "^2.9.15",
     "react-fontawesome": "^1.6.1",
+    "react-key-handler": "^1.0.1",
     "react-rangeslider": "^2.2.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",

@@ -15,8 +15,11 @@ import Select from 'react-select';
 import 'react-rangeslider/lib/index.css'
 import 'react-select/dist/react-select.css'
 import _ from 'lodash'
+import KeyHandler, {KEYDOWN} from 'react-key-handler'
 const jsdiff = require('diff')
 const history = createHistory()
+
+const INTERVAL = 3600000
 
 class App extends Component {
   render() {
@@ -120,6 +123,7 @@ class Home extends Component {
     )
   }
 }
+
 class Vis1 extends Component {
   constructor(props) {
     super(props);
@@ -175,7 +179,7 @@ class Vis1 extends Component {
     this.fetch(this.state.timestamp)
     this.fetchInterval = setInterval(() => {
       if (self.state.playing && !self.state.firstLoad) {
-        const newTimestamp = self.state.timestamp + 3600000 
+        const newTimestamp = self.state.timestamp + INTERVAL 
         if (newTimestamp < Date.now()) {
           if (self.state.preloadedSnapshot) {
             self.setState({snapshot: self.state.preloadedSnapshot})
@@ -196,6 +200,31 @@ class Vis1 extends Component {
   render() {
     return (
       <div className="Vis1">
+        <KeyHandler
+          keyEventName={KEYDOWN}
+          keyValue="Enter"
+          onKeyHandle={() => this.setState({playing: !this.state.playing})} 
+        />
+        <KeyHandler
+          keyEventName={KEYDOWN}
+          keyValue="ArrowRight"
+          onKeyHandle={() => {
+            this.setState({
+              playing: false
+            })
+            this.fetch(this.state.timestamp + INTERVAL)
+          }} 
+        />
+        <KeyHandler
+          keyEventName={KEYDOWN}
+          keyValue="ArrowLeft"
+          onKeyHandle={() => {
+            this.setState({
+              playing: false
+            })
+            this.fetch(this.state.timestamp - INTERVAL)
+          }} 
+        />
         <div className="Vis1-header">
           <div className="Header-controls">
             <Select
